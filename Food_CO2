@@ -1,0 +1,42 @@
+food = pd.read_csv("datasets/food_consumption.csv")
+
+import numpy as np
+
+be_consumption= food_consumption[food_consumption['country']=='Belgium']
+usa_consumption = food_consumption[food_consumption['country']=='USA']
+print(np.mean(be_consumption['consumption']))
+print(np.median(be_consumption['consumption']))
+print(np.mean(usa_consumption['consumption']))
+print(np.median(usa_consumption['consumption']))
+
+import numpy as np
+be_and_usa = food_consumption[(food_consumption['country'] == "Belgium") | (food_consumption['country'] == 'USA')]
+print(be_and_usa.groupby('country')['consumption'].agg([np.mean, np.median]))
+
+import matplotlib.pyplot as plt
+rice_consumption = food_consumption[food_consumption['food_category']=="rice"]
+rice_consumption['co2_emission'].hist()
+plt.show()
+
+print(food_consumption.groupby('food_category')['co2_emission'].agg([np.var,np.std]))
+beef_consumption=food_consumption[food_consumption["food_category"]=="beef"]
+beef_consumption['co2_emission'].hist()
+plt.show()
+
+eggs_consumption=food_consumption[food_consumption["food_category"]=="eggs"]
+eggs_consumption['co2_emission'].hist()
+plt.show()
+
+emissions_by_country = food_consumption.groupby('country')["co2_emission"].sum()
+print(emissions_by_country)
+emissions_by_country = food_consumption.groupby('country')['co2_emission'].sum()
+
+
+q1 = np.quantile(emissions_by_country, 0.25)
+q3 = np.quantile(emissions_by_country, 0.75)
+iqr = q3 - q1
+lower = q1 - 1.5 * iqr
+upper = q3 + 1.5 * iqr
+
+outliers = emissions_by_country[(emissions_by_country < lower) | (emissions_by_country > upper)]
+print(outliers)
